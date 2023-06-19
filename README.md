@@ -1,17 +1,7 @@
-# foody
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# restaurant-app-ui-design
+![image](https://github.com/yassine-bennkhay/restaurant-app-ui-design/assets/60018749/36642254-938a-40bf-8594-05ae5229069a)
+<p align="center">
+  <img src="https://github.com/yassine-bennkhay/restaurant-app-ui-design/assets/60018749/c02072d7-499d-4c3a-b341-09095b262901" alt="Image 1">
+  <img src="https://github.com/yassine-bennkhay/restaurant-app-ui-design/assets/60018749/d01c3c24-3244-4a00-97d8-a3cb8b0fa6bf" alt="Image 2">
+  <img src="https://github.com/yassine-bennkhay/restaurant-app-ui-design/assets/60018749/5b64883c-e038-4edb-89e4-a30e10a5e57b" alt="Image 3">
+</p>
