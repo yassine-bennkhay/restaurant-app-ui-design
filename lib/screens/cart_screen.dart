@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:foody/data/data.dart';
 import 'package:foody/utils/constants.dart';
+import 'package:foody/widgets/price_shimmer.dart';
 
 import '../models/order.dart';
+import '../widgets/cart_shimmer.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -108,6 +110,19 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double totalPrice = 0;
@@ -122,58 +137,63 @@ class _CartScreenState extends State<CartScreen> {
           itemBuilder: (BuildContext context, int index) {
             if (index < currentUser.cart!.length) {
               Order order = currentUser.cart![index];
-              return _buildCartItem(order);
+
+              return isLoading
+                  ? const CartItemShimmer()
+                  : _buildCartItem(order);
             }
-            return Container(
-              margin: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Estimated Delivery Time:",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
+            return isLoading
+                ? const PriceShimmer()
+                : Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Estimated Delivery Time:",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              "30min",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                      Text(
-                        "30min",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
+                        const SizedBox(
+                          height: 10,
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Total:",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Total:",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Text(
+                              "${totalPrice.toStringAsFixed(2)}\$",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.green,
+                                fontSize: 18,
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                      Text(
-                        "${totalPrice.toStringAsFixed(2)}\$",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Colors.green,
-                          fontSize: 18,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.width / 4,
-                  )
-                ],
-              ),
-            );
+                        SizedBox(
+                          height: MediaQuery.of(context).size.width / 4,
+                        )
+                      ],
+                    ),
+                  );
           },
           separatorBuilder: (BuildContext context, int inded) {
             return const Divider(
