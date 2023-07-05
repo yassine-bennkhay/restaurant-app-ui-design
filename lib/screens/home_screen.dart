@@ -3,7 +3,9 @@ import 'package:foody/data/data.dart';
 import 'package:foody/screens/restaurant_screen.dart';
 import 'package:foody/utils/constants.dart';
 import 'package:foody/widgets/recent_orders.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../controllers/admob_controller.dart';
 import '../widgets/rating_stars.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +15,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> implements BannerAdListener {
+  late BannerAd _firstBannerAd;
+  late BannerAd _secondBannerAd;
+  bool _isBannerAdLoaded = false;
+
   _buildRestaurants() {
     List<Widget> restaurantsList = [];
 
@@ -21,12 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
       restaurantsList.add(
         GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => RestaurantScreen(restaurant: restaurant),
-              ),
-            );
+            AdManager.loadInterstitialAd(() {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => RestaurantScreen(restaurant: restaurant),
+                ),
+              );
+            });
           },
           child: Container(
             decoration: BoxDecoration(
@@ -99,6 +107,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    AdManager.loadBannerAd(this).then((ad) => setState(() {
+          _firstBannerAd = ad;
+          _isBannerAdLoaded = true;
+        }));
+    AdManager.loadBannerAd(this).then((ad) => setState(() {
+          _secondBannerAd = ad;
+          _isBannerAdLoaded = true;
+        }));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(physics: const BouncingScrollPhysics(), children: [
@@ -129,6 +150,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        _isBannerAdLoaded
+            ? Center(
+                child: SizedBox(
+                  height: _secondBannerAd.size.height.toDouble(),
+                  width: _secondBannerAd.size.width.toDouble(),
+                  child: AdWidget(ad: _secondBannerAd),
+                ),
+              )
+            : const SizedBox(),
         const RecentOrders(),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,10 +185,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
+            _isBannerAdLoaded
+  ? Center(
+                    child: SizedBox(
+                      height: _firstBannerAd.size.height.toDouble(),
+                      width: _firstBannerAd.size.width.toDouble(),
+                      child: AdWidget(ad: _firstBannerAd),
+                    ),
+                  )
+                : const SizedBox(),
             _buildRestaurants(),
           ],
         )
       ]),
     );
   }
+
+  @override
+  // TODO: implement onAdClicked
+  AdEventCallback? get onAdClicked => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdClosed
+  AdEventCallback? get onAdClosed => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdFailedToLoad
+  AdLoadErrorCallback? get onAdFailedToLoad => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdImpression
+  AdEventCallback? get onAdImpression => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdLoaded
+  AdEventCallback? get onAdLoaded => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdOpened
+  AdEventCallback? get onAdOpened => throw UnimplementedError();
+
+  @override
+  // TODO: implement onAdWillDismissScreen
+  AdEventCallback? get onAdWillDismissScreen => throw UnimplementedError();
+
+  @override
+  // TODO: implement onPaidEvent
+  OnPaidEventCallback? get onPaidEvent => throw UnimplementedError();
 }
